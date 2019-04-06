@@ -1,4 +1,4 @@
-package Values;
+package LifxCommander.Values;
 
 public class Product {
 	private Product() {}		// Prevent Instantiation

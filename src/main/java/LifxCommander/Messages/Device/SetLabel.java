@@ -1,6 +1,5 @@
 package LifxCommander.Messages.Device;
 
-import LifxCommander.CommonMethods;
 import LifxCommander.Messages.DataTypes.Payload;
 
 public class SetLabel extends Payload{

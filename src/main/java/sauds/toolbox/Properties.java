@@ -10,10 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +23,7 @@ public class Properties {
     
     private final File file;
     private String separator;
-    private HashMap<String, String> map = new HashMap();
+    private HashMap<String, String> map = new HashMap<>();
     
     public Properties(File f) {
         this(f, " - ");
@@ -39,12 +37,12 @@ public class Properties {
     public Properties(Properties p) {
         file = p.file;
         separator = p.separator;
-        map = new HashMap(map);
+        map = new HashMap<>(map);
     }
     
     public void cloneDataFrom(Properties p) {
         separator = p.separator;
-        map = new HashMap(p.map);
+        map = new HashMap<>(p.map);
     }
     
     
@@ -112,7 +110,8 @@ public class Properties {
                 String[] lineArr = line.split(separator, 2);
                 map.put(lineArr[0], lineArr[1]);
             }
-        }
+        } 
+        in.close();
     }
     
     public void save() {

@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Random;
 
-import LifxCommander.CommonMethods;
 import LifxCommander.Messages.DataTypes.Payload;
 
 public class StateLocation extends Payload{

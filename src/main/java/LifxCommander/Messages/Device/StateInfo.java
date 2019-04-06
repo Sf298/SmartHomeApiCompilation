@@ -2,7 +2,6 @@ package LifxCommander.Messages.Device;
 
 import java.math.BigInteger;
 
-import LifxCommander.CommonMethods;
 import LifxCommander.Messages.DataTypes.Payload;
 
 public class StateInfo extends Payload{

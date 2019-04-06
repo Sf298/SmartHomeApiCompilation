@@ -7,7 +7,6 @@ package com.sacide.smart.home.api.compilation.backend;
 
 import LifxCommander.Messages.DataTypes.HSBK;
 import java.io.IOException;
-import javafx.scene.paint.Color;
 
 /**
  *
