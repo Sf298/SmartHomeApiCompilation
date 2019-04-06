@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class Main {
     
     public static void main(String[] args) {
-        testPhilipsHue();
+    	testFroodleSpinner();
     }
     
     public static void testLifx() {
@@ -67,6 +67,11 @@ public class Main {
                 Logger.getLogger(PhilipsAPIV.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public static void testFroodleSpinner() { 
+    	BlindsAPI api = new BlindsAPI();
+    	Collection<Device> devices = api.discoverDevices();
     }
     
 }
