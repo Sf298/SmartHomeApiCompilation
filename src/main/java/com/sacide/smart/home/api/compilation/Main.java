@@ -17,61 +17,76 @@ import java.util.logging.Logger;
  * @author saud
  */
 public class Main {
-    
-    public static void main(String[] args) {
-    	testFroodleSpinner();
-    }
-    
-    public static void testLifx() {
-        try {
-            LifxCommanderW lifx = new LifxCommanderW();
-            lifx.discoverDevices();
-            RGBLightDevice ld = lifx.toRGBLightDevice(new Device("192.168.0.56", 56700));
-            ld.setLightPowerState(true, 0);
-            
-            
-            HSBK col;
-            double num = Math.random();
-            if(num<(1/4f)) {
-                col = HSBK.CRIMSON;
-                System.out.println("red");
-            } else if(num<(2/4f)) {
-                col = HSBK.INDIGO;
-                System.out.println("indigo");
-            } else if(num<(3/4f)) {
-                col = HSBK.FOREST_GREEN;
-                System.out.println("green");
-            } else {
-                col = HSBK.INCANDESCENT;
-                System.out.println("incan");
-            }
-            ld.setLightColor(HSBK.DAYLIGHT, 0);
-            ld.setLightBrightness(0.47, 0);
-        } catch (IOException ex) {
-            Logger.getLogger(LifxCommanderW.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    public static void testPhilipsHue() {
-        PhilipsAPIV ph = new PhilipsAPIV();
-        Collection<Device> devices = ph.discoverDevices();
-        
-        System.out.println("num devices: "+devices.size());
-        for(Device d : devices) {
-            System.out.println(d);
-            if(!(d instanceof LightDevice)) continue;
-            try {
-                LightDevice ld = (LightDevice) d;
-                ld.setLightPowerState(false, 0);
-                ld.setLightBrightness(0.47, 0);
-            } catch (IOException ex) {
-                Logger.getLogger(PhilipsAPIV.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    public static void testFroodleSpinner() { 
-    	BlindsAPI api = new BlindsAPI();
-    	Collection<Device> devices = api.discoverDevices();
-    }
-    
+
+	public static void main(String[] args) {
+		testFroodleSpinner();
+	}
+
+	public static void testLifx() {
+		try {
+			LifxCommanderW lifx = new LifxCommanderW();
+			lifx.discoverDevices();
+			RGBLightDevice ld = lifx.toRGBLightDevice(new Device("192.168.0.56", 56700));
+			ld.setLightPowerState(true, 0);
+
+			HSBK col;
+			double num = Math.random();
+			if (num < (1 / 4f)) {
+				col = HSBK.CRIMSON;
+				System.out.println("red");
+			} else if (num < (2 / 4f)) {
+				col = HSBK.INDIGO;
+				System.out.println("indigo");
+			} else if (num < (3 / 4f)) {
+				col = HSBK.FOREST_GREEN;
+				System.out.println("green");
+			} else {
+				col = HSBK.INCANDESCENT;
+				System.out.println("incan");
+			}
+			ld.setLightColor(HSBK.DAYLIGHT, 0);
+			ld.setLightBrightness(0.47, 0);
+		} catch (IOException ex) {
+			Logger.getLogger(LifxCommanderW.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	public static void testPhilipsHue() {
+		PhilipsAPIV ph = new PhilipsAPIV();
+		Collection<Device> devices = ph.discoverDevices();
+
+		System.out.println("num devices: " + devices.size());
+		for (Device d : devices) {
+			System.out.println(d);
+			if (!(d instanceof LightDevice))
+				continue;
+			try {
+				LightDevice ld = (LightDevice) d;
+				ld.setLightPowerState(false, 0);
+				ld.setLightBrightness(0.47, 0);
+			} catch (IOException ex) {
+				Logger.getLogger(PhilipsAPIV.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public static void testFroodleSpinner() {
+		try {
+			BlindsAPI api = new BlindsAPI();
+			Collection<Device> devices = api.discoverDevices();
+			for (Device dev : devices) {
+				BlindsDevice blindDev = (BlindsDevice) dev;
+				
+				int angle = blindDev.getAngle();
+				System.out.println("Current angle before increment of 10 : " + angle);
+				blindDev.setAngle(angle + 1);
+				System.out.println("Current angle after increment of 10 : " + blindDev.getAngle());
+			}
+
+		} catch (IOException ex) {
+			Logger.getLogger(PhilipsAPIV.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+	}
+
 }
