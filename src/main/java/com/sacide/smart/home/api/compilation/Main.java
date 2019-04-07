@@ -6,10 +6,13 @@
 package com.sacide.smart.home.api.compilation;
 
 import LifxCommander.Messages.DataTypes.HSBK;
+
 import com.sacide.smart.home.api.compilation.backend.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -96,7 +99,7 @@ public class Main {
             }
     }
 
-    public static void testFroodleSpinner() {
+	public static void testBlindsApi() {
 		try {
 			BlindsAPI api = new BlindsAPI();
 			Collection<Device> devices = api.discoverDevices();
@@ -111,6 +114,22 @@ public class Main {
 
 		} catch (IOException ex) {
 			Logger.getLogger(PhilipsAPIV.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+	}
+	
+	public static void testTPLink() throws IOException {
+		TPLinkAPI api = new TPLinkAPI();
+		Collection<Device> devices = api.discoverDevices();
+		for (Device dev : devices) {
+			OnOffDevice onOffDev = (OnOffDevice) dev;
+			System.out.println("ip:" + onOffDev.ip_id + ", port=" +onOffDev.port+ ", label=" + onOffDev.label);
+			boolean power = onOffDev.getPowerState();
+			System.out.println("Current power  : " + power);
+			
+			//onOffDev.setPowerState(false);
+			//Thread.sleep(2000);
+			//onOffDev.setPowerState(true);
 		}
 
 	}
