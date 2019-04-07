@@ -235,6 +235,14 @@ public final class PhilipsAPIV implements IActionAPI {
     
     public LightDevice toLightDevice(Device d) {
         return new LightDevice(d) {
+			@Override
+			public void setPowerState(boolean on) throws IOException {
+				setLightPowerState(on, 0);
+			}
+			@Override
+			public boolean getPowerState() throws IOException {
+				return getLightPowerState();
+			}
             @Override
             public void setLightPowerState(boolean on, long duration) throws IOException {
             	NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>/state"), "PUT",
@@ -253,7 +261,6 @@ public final class PhilipsAPIV implements IActionAPI {
             	NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>/state"), "PUT",
                         NetUtils.properties2body("\"bri\"", ( (int)(brightness*253)+1 )+""));
             }
-
             @Override
             public double getLightBrightness() throws IOException {
                 String response = NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>"), "GET", null);
@@ -264,6 +271,14 @@ public final class PhilipsAPIV implements IActionAPI {
     }
     public LightDevice toRGBLightDevice(Device d) {
         return new RGBLightDevice(d) {
+			@Override
+			public void setPowerState(boolean on) throws IOException {
+				setLightPowerState(on, 0);
+			}
+			@Override
+			public boolean getPowerState() throws IOException {
+				return getLightPowerState();
+			}
             @Override
             public void setLightPowerState(boolean on, long duration) throws IOException {
             	NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>/state"), "PUT",
@@ -302,7 +317,6 @@ public final class PhilipsAPIV implements IActionAPI {
                 out.setBrightness(state.getInt("bri")-1, 253);
                 return out;
             }
-
             @Override
             public double getLightBrightness() throws IOException {
                 return getLightColor().getBrightness()/HSBK.MAX_BRI;

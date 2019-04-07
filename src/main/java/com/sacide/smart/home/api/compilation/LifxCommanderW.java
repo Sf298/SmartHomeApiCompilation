@@ -69,6 +69,14 @@ public class LifxCommanderW implements IActionAPI {
     
     public RGBLightDevice toRGBLightDevice(Device d) {
         return new RGBLightDevice(d) {
+			@Override
+			public void setPowerState(boolean on) throws IOException {
+				setLightPowerState(on, 0);
+			}
+			@Override
+			public boolean getPowerState() throws IOException {
+				return getLightPowerState();
+			}
             @Override
             public void setLightPowerState(boolean on, long duration) throws IOException {
                 for (int i = 0; i < 3; i++) { // try 3 times in case of faliure
@@ -138,7 +146,6 @@ public class LifxCommanderW implements IActionAPI {
                 }
                 throw new IOException("No response from device");
             }
-
             @Override
             public double getLightBrightness() throws IOException {
                 return getLightColor().getBrightness()/(double)HSBK.MAX_BRI;
