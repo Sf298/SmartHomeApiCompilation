@@ -33,7 +33,7 @@ public class NetUtils {
 	 * @return The String response as received from the bridge. Refer to the Hue
 	 * API.
 	 * @throws javax.security.sasl.AuthenticationException
-	 * @throws If an I/O error occurs.
+	 * @throws IOException if an I/O error occurs.
 	 */
 	public static String makeAPIRequest(URL url, String method) throws AuthenticationException, IOException {
 		return makeAPIRequest(url, method, null);
@@ -48,7 +48,7 @@ public class NetUtils {
 	 * @return The String response as received from the bridge. Refer to the Hue
 	 * API.
 	 * @throws javax.security.sasl.AuthenticationException
-	 * @throws If an I/O error occurs.
+	 * @throws IOException If an I/O error occurs.
 	 */
 	public static String makeAPIRequest(URL url, String method, String body)
 			throws AuthenticationException, IOException {

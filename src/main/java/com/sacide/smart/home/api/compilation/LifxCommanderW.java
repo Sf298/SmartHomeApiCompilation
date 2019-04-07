@@ -23,7 +23,6 @@ import LifxCommander.Messages.Light.SetColor;
 import LifxCommander.Messages.Light.SetPower_Light;
 import LifxCommander.Messages.Light.StatePower_Light;
 import LifxCommander.Messages.Light.State_Light;
-import LifxCommander.Values.Levels;
 import LifxCommander.Values.Power;
 import java.io.IOException;
 import java.net.DatagramPacket;

@@ -22,7 +22,7 @@ import com.sacide.smart.home.api.compilation.backend.IActionAPI;
 import com.sacide.smart.home.api.compilation.backend.OnOffDevice;
 import com.sacide.smart.home.api.compilation.backend.utils.NetUtils;
 import com.sacide.smart.home.api.compilation.backend.utils.NetUtils.ResponseChecker;
-
+ 
 /**
  * TP-Link HS100
  *
