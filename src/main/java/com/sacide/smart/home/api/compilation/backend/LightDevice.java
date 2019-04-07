@@ -11,7 +11,7 @@ import java.io.IOException;
  *
  * @author saud
  */
-public abstract class LightDevice extends Device {
+public abstract class LightDevice extends OnOffDevice {
     
     public LightDevice(String ip, int port, String label) {
         super(ip, port, label);
