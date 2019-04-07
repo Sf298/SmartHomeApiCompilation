@@ -60,7 +60,7 @@ public class LifxCommanderW implements IActionAPI {
                 StateLabel stateLabel = (StateLabel) buildPayload(labelArr);
                 d.label = stateLabel.getLabel();
                 
-                out.add(d);
+                out.add(toRGBLightDevice(d));
             }
         } catch (IOException ex) {
             Logger.getLogger(LifxCommanderW.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,7 +122,7 @@ public class LifxCommanderW implements IActionAPI {
             }
             @Override
             public void setLightBrightness(double brightness, long duration) throws IOException {
-                setLightColor(new HSBK(-1, -1, (int)(Levels.MAX*brightness), -1), duration);
+                setLightColor(new HSBK(-1, -1, (int)(HSBK.MAX_BRI*brightness), -1), duration);
             }
             @Override
             public HSBK getLightColor() throws IOException {
@@ -138,6 +138,11 @@ public class LifxCommanderW implements IActionAPI {
                     return state.getColor();
                 }
                 throw new IOException("No response from device");
+            }
+
+            @Override
+            public double getLightBrightness() throws IOException {
+                return getLightColor().getBrightness()/(double)HSBK.MAX_BRI;
             }
         };
     }

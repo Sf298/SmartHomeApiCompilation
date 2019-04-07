@@ -54,7 +54,6 @@ public final class PhilipsAPIV implements IActionAPI {
     
     /**
      * Creates a PhilipsAPIV Object.
-     * @param parentWindow The parent window to freeze when show() is called.
      * @param persistenceFile The file in which to store the username and preferred bridge mac. 
      */
     public PhilipsAPIV(File persistenceFile) {
@@ -254,6 +253,13 @@ public final class PhilipsAPIV implements IActionAPI {
             	NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>/state"), "PUT",
                         NetUtils.properties2body("\"bri\"", ( (int)(brightness*253)+1 )+""));
             }
+
+            @Override
+            public double getLightBrightness() throws IOException {
+                String response = NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>"), "GET", null);
+                JSONObject state = new JSONObject(response).getJSONObject("state");
+                return (state.getInt("bri")-1)/253.0;
+            }
         };
     }
     public LightDevice toRGBLightDevice(Device d) {
@@ -291,19 +297,15 @@ public final class PhilipsAPIV implements IActionAPI {
                 String response = NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>"), "GET", null);
                 JSONObject state = new JSONObject(response).getJSONObject("state");
                 HSBK out = new HSBK();
-                if(state.has("hue"))
-                    out.setHue(state.getInt("hue"), 65535);
-                else
-                    out.setHue(0);
-                if(state.has("sat"))
-                    out.setSaturation(state.getInt("sat"), 254);
-                else
-                    out.setHue(0);
-                if(state.has("bri"))
-                    out.setBrightness(state.getInt("bri")-1, 253);
-                else
-                    out.setHue(0);
+                out.setHue(state.getInt("hue"), 65535);
+                out.setSaturation(state.getInt("sat"), 254);
+                out.setBrightness(state.getInt("bri")-1, 253);
                 return out;
+            }
+
+            @Override
+            public double getLightBrightness() throws IOException {
+                return getLightColor().getBrightness()/HSBK.MAX_BRI;
             }
         };
     }

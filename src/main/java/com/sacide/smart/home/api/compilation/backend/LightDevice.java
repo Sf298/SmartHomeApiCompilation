@@ -29,4 +29,6 @@ public abstract class LightDevice extends Device {
     
     public abstract void setLightBrightness(double brightness, long duration) throws IOException;
     
+    public abstract double getLightBrightness() throws IOException;
+    
 }
