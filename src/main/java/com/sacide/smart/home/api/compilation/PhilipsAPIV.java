@@ -192,7 +192,8 @@ public final class PhilipsAPIV implements IActionAPI {
      * Shows a UI for editing the settings.
      * @param parentWindow the parent window
      */
-    public void show(Window parentWindow) {
+    @Deprecated
+	public void show(Window parentWindow) {
         discoverBridges();
         
         JPanel mainPanel = new JPanel(new BorderLayout());
