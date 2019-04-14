@@ -12,9 +12,11 @@ import java.util.Objects;
  * @author saud
  */
 public class Device {
-    public String ip_id;
-    public int port;
-    public String label;
+    protected String ip_id;
+    protected int port;
+    protected String label;
+	protected Integer hashCache = null;
+	
     public Device(String ip_id, int port, String label) {
         this.ip_id = ip_id;
         this.port = port;
@@ -27,17 +29,42 @@ public class Device {
         this(d.ip_id, d.port, d.label);
     }
 
+	public String getIp_id() {
+		return ip_id;
+	}
+	public void setIp_id(String ip_id) {
+		clearCache();
+		this.ip_id = ip_id;
+	}
+	public int getPort() {
+		return port;
+	}
+	public void setPort(int port) {
+		clearCache();
+		this.port = port;
+	}
+	public String getLabel() {
+		return label;
+	}
+	public void setLabel(String label) {
+		clearCache();
+		this.label = label;
+	}
+	
     @Override
     public String toString() {
         return label;
     }
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.ip_id);
-        hash = 89 * hash + this.port;
-        hash = 89 * hash + Objects.hashCode(this.label);
-        return hash;
+		if(hashCache == null) {
+			int hash = 7;
+			hash = 89 * hash + Objects.hashCode(this.ip_id);
+			hash = 89 * hash + this.port;
+			hash = 89 * hash + Objects.hashCode(this.label);
+			hashCache = hash;
+		}
+		return hashCache;
     }
     @Override
     public boolean equals(Object obj) {
@@ -66,6 +93,10 @@ public class Device {
     public String toFormattedString() {
         return label+" = "+ip_id+":"+port;
     }
+	
+	protected void clearCache() {
+		hashCache = null;
+	}
 
 }
     

@@ -121,7 +121,7 @@ public final class PhilipsAPIV implements IActionAPI {
                     boolean reachable = light.getJSONObject("state").getBoolean("reachable");
                     if(reachable) {
                         Device d = new Device(bridge.id, Integer.parseInt(lightID));
-                        d.label = light.getString("name");
+                        d.setLabel(light.getString("name"));
                         out.add(toLightDevice(d));
                     }
                 }
@@ -179,9 +179,9 @@ public final class PhilipsAPIV implements IActionAPI {
      * @throws MalformedURLException 
      */
     private URL parseURL(Device d, String context) throws MalformedURLException {
-        BridgeObj bridge = onlineBridges.get(d.ip_id);
+        BridgeObj bridge = onlineBridges.get(d.getIp_id());
         context = context.replace("<uname>", bridge.uname);
-        context = context.replace("<deviceId>", d.port+"");
+        context = context.replace("<deviceId>", d.getPort()+"");
         if(!context.startsWith("/")) context = "/"+context;
         return new URL("http://" + bridge.ip + context);
     }

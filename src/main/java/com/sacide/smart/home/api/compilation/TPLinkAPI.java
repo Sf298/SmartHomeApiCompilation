@@ -53,7 +53,7 @@ public class TPLinkAPI implements IActionAPI {
 				}
 			});
 			for (Device device: devices) {
-				device.label = getName(device);
+				device.setLabel(getName(device));
 			}
 			return devices;
 			
@@ -191,7 +191,7 @@ public class TPLinkAPI implements IActionAPI {
      */
     protected String sendCommand(Device dev, String command) throws IOException {
  
-        Socket socket = new Socket(dev.ip_id, dev.port);
+        Socket socket = new Socket(dev.getIp_id(), dev.getPort());
         OutputStream outputStream = socket.getOutputStream();
         outputStream.write(encryptWithHeader(command));
  

@@ -54,10 +54,10 @@ public class LifxCommanderW implements IActionAPI {
                 Device d = new Device(response.getAddress().getHostAddress(), (int)port);
                 
                 GetLabel getLabel = new GetLabel();
-                ControlMethods.sendUdpMessage(new Command(getLabel).getByteArray(), d.ip_id, d.port);
+                ControlMethods.sendUdpMessage(new Command(getLabel).getByteArray(), d.getIp_id(), d.getPort());
                 DatagramPacket labelArr = ControlMethods.receiveUdpMessage(SINGLE_TIMEOUT);
                 StateLabel stateLabel = (StateLabel) buildPayload(labelArr);
-                d.label = stateLabel.getLabel();
+                d.setLabel(stateLabel.getLabel());
                 
                 out.add(toRGBLightDevice(d));
             }
