@@ -2,6 +2,7 @@ package LifxCommander.Messages.DataTypes;
 
 import LifxCommander.Values.Kelvin;
 import LifxCommander.Values.Levels;
+import java.awt.Color;
 
 public class HSBK {
     
@@ -138,6 +139,10 @@ public class HSBK {
     }
     public void setKelvin(int kelvin) {
         this.kelvin = kelvin;
+    }
+    
+    public Color asColor() {
+	return Color.getHSBColor(hue, saturation, brightness);
     }
 
     @Override
