@@ -114,6 +114,7 @@ public final class PhilipsAPIV implements IActionAPI {
             
             try {
                 String resp = NetUtils.makeAPIRequest(parseURL(bridge, "/api/<uname>/lights"), "GET", null);
+				checkResponse(resp);
                 if(!NetUtils.isJSONObj(resp)) continue;
                 JSONObject lights = new JSONObject(resp);
                 for(String lightID : lights.keySet()) {
@@ -142,8 +143,10 @@ public final class PhilipsAPIV implements IActionAPI {
             BridgeObj val = entry.getValue();
             if(val.uname != null) continue;
             try {
-                JSONArray response = new JSONArray(NetUtils.makeAPIRequest(parseURL(val, "/api"), "POST",
-                        NetUtils.properties2body("\"devicetype\"", "\"EverythingBridge#EBUser\"")));
+				String resp = NetUtils.makeAPIRequest(parseURL(val, "/api"), "POST",
+                        NetUtils.properties2body("\"devicetype\"", "\"EverythingBridge#EBUser\""));
+				checkResponse(resp);
+                JSONArray response = new JSONArray(resp);
                 JSONObject reponse2 = response.getJSONObject(0);
                 if(reponse2.has("success"))
                     val.uname = reponse2.getJSONObject("success").getString("username");
@@ -155,7 +158,12 @@ public final class PhilipsAPIV implements IActionAPI {
             }
         }
     }
-
+	
+	private void checkResponse(String resp) throws AuthenticationException {
+		if(!resp.contains("Device is set to off") && resp.contains("error")) {
+			throw new AuthenticationException(resp);
+		}
+	}
     
     
    
@@ -254,6 +262,7 @@ public final class PhilipsAPIV implements IActionAPI {
             @Override
             public boolean getLightPowerState() throws IOException {
                 String response = NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>"), "GET", null);
+				checkResponse(response);
                 JSONObject resp = new JSONObject(response);
                 return resp.getJSONObject("state").getBoolean("on");
             }
@@ -265,12 +274,13 @@ public final class PhilipsAPIV implements IActionAPI {
             @Override
             public double getLightBrightness() throws IOException {
                 String response = NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>"), "GET", null);
+				checkResponse(response);
                 JSONObject state = new JSONObject(response).getJSONObject("state");
                 return (state.getInt("bri")-1)/253.0;
             }
         };
     }
-    public LightDevice toRGBLightDevice(Device d) {
+    public RGBLightDevice toRGBLightDevice(Device d) {
         return new RGBLightDevice(d) {
 			@Override
 			public void setPowerState(boolean on) throws IOException {
@@ -290,6 +300,7 @@ public final class PhilipsAPIV implements IActionAPI {
             @Override
             public boolean getLightPowerState() throws IOException {
                 String response = NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>"), "GET", null);
+				checkResponse(response);
                 JSONObject resp = new JSONObject(response);
                 return resp.getJSONObject("state").getBoolean("on");
             }
@@ -311,6 +322,7 @@ public final class PhilipsAPIV implements IActionAPI {
             @Override
             public HSBK getLightColor() throws IOException {
                 String response = NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>"), "GET", null);
+				checkResponse(response);
                 JSONObject state = new JSONObject(response).getJSONObject("state");
                 HSBK out = new HSBK();
                 out.setHue(state.getInt("hue"), 65535);

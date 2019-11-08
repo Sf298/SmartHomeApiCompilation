@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-		testBlindsApi();
+		testWemo();
         /*ArrayList<Device> devices = new ArrayList<>();
         
         LifxCommanderW lifx = new LifxCommanderW();
@@ -97,46 +97,64 @@ public class Main {
             }
     }
 
-	public static void testBlindsApi() {
-		try {
-			BlindsAPI api = new BlindsAPI();
-			Collection<Device> devices = api.discoverDevices();
-			for (Device dev : devices) {
-				BlindsDevice blindDev = (BlindsDevice) dev;
-				System.out.println(dev.getIp_id());
-				
-				//int angle = blindDev.getAngle();
-				//System.out.println("Current angle before increment of 10 : " + angle);
-				blindDev.setAngle(800);
-				//System.out.println("Current angle after increment of 10 : " + blindDev.getAngle());
+    public static void testBlindsApi() {
+	    try {
+		    BlindsAPI api = new BlindsAPI();
+		    Collection<Device> devices = api.discoverDevices();
+		    for (Device dev : devices) {
+			    BlindsDevice blindDev = (BlindsDevice) dev;
+			    System.out.println(dev.getIp_id());
+
+			    //int angle = blindDev.getAngle();
+			    //System.out.println("Current angle before increment of 10 : " + angle);
+			    blindDev.setAngle(800);
+			    //System.out.println("Current angle after increment of 10 : " + blindDev.getAngle());
+			    try {
+				    Thread.sleep(2000);
+			    } catch(InterruptedException ex) {
+				    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+			    }
+			    blindDev.setAngle(1500);
+		    }
+
+	    } catch (IOException ex) {
+		    Logger.getLogger(PhilipsAPIV.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+
+    }
+
+    public static void testTPLink() throws IOException {
+	    TPLinkAPI api = new TPLinkAPI();
+	    Collection<Device> devices = api.discoverDevices();
+	    for (Device dev : devices) {
+		    OnOffDevice onOffDev = (OnOffDevice) dev;
+		    System.out.println("ip:" + onOffDev.getIp_id() + ", port=" +onOffDev.getPort()+ ", label=" + onOffDev.getLabel());
+		    boolean power = onOffDev.getPowerState();
+		    System.out.println("Current power  : " + power);
+
+		    //onOffDev.setPowerState(false);
+		    //Thread.sleep(2000);
+		    //onOffDev.setPowerState(true);
+	    }
+
+    }
+    
+	public static void testWemo() throws IOException {
+		WemoAPI api = new WemoAPI();
+		OnOffDevice d = api.toOnOffDevice(new Device("192.168.0.16", 49154, "Lounge"));
+		System.out.println(d.getPowerState());
+		/*
+		Collection<Device> devices = api.discoverDevices();
+		for (Device device : devices) {
+			if(device instanceof OnOffDevice && device.getLabel().equals("Lamp")) {
+				OnOffDevice d = (OnOffDevice) device;
 				try {
-					Thread.sleep(2000);
-				} catch(InterruptedException ex) {
+					System.out.println(d.getPowerState());
+				} catch (IOException ex) {
 					Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 				}
-				blindDev.setAngle(1500);
 			}
-
-		} catch (IOException ex) {
-			Logger.getLogger(PhilipsAPIV.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
-	}
-	
-	public static void testTPLink() throws IOException {
-		TPLinkAPI api = new TPLinkAPI();
-		Collection<Device> devices = api.discoverDevices();
-		for (Device dev : devices) {
-			OnOffDevice onOffDev = (OnOffDevice) dev;
-			System.out.println("ip:" + onOffDev.getIp_id() + ", port=" +onOffDev.getPort()+ ", label=" + onOffDev.getLabel());
-			boolean power = onOffDev.getPowerState();
-			System.out.println("Current power  : " + power);
-			
-			//onOffDev.setPowerState(false);
-			//Thread.sleep(2000);
-			//onOffDev.setPowerState(true);
-		}
-
-	}
-
+		}*/
+    }
+    
 }

@@ -41,8 +41,6 @@ public class TPLinkAPI implements IActionAPI {
 	public Collection<Device> discoverDevices() {
     	try {
 			ArrayList<Device> devices = NetUtils.getAvaiableDevicesByIP(new ResponseChecker() {
-			
-				
 				@Override
 				public Device checkResponse(String host) throws IOException {
 					URL url = ipToURL(host);

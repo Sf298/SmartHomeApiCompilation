@@ -13,6 +13,7 @@ import com.sacide.smart.home.api.compilation.backend.Device;
 import com.sacide.smart.home.api.compilation.backend.IActionAPI;
 import com.sacide.smart.home.api.compilation.backend.utils.NetUtils;
 import com.sacide.smart.home.api.compilation.backend.utils.NetUtils.ResponseChecker;
+import javax.security.sasl.AuthenticationException;
 
 public class BlindsAPI implements IActionAPI {
 
@@ -42,7 +43,7 @@ public class BlindsAPI implements IActionAPI {
 		return null;
 	}
 
-	 public BlindsDevice toBlindDevice(Device d) {
+	public BlindsDevice toBlindDevice(Device d) {
 	        return new BlindsDevice(d) {
 
 				@Override
@@ -55,12 +56,20 @@ public class BlindsAPI implements IActionAPI {
 				@Override
 				public int getAngle() throws IOException {
 					URL url = ipToURL(ip_id);
-					JSONObject json = new JSONObject(NetUtils.makeAPIRequest(url,"GET"));
+					String resp = NetUtils.makeAPIRequest(url,"GET");
+					JSONObject json = new JSONObject(resp);
+					checkResponse(resp);
 					return json.getInt("angle");
 				}
 	            
 	        };
-	 }
+	}
+	 
+	private void checkResponse(String resp) throws AuthenticationException {
+		if(!resp.contains("Device is set to off") && resp.contains("error")) {
+			throw new AuthenticationException(resp);
+		}
+	}
 	 
 	 private URL ipToURL(String ip) throws MalformedURLException {
 		 return new URL("http://" + ip + "/devices");
