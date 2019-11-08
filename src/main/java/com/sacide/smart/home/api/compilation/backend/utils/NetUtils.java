@@ -19,6 +19,9 @@ import javax.security.sasl.AuthenticationException;
 
 import com.sacide.smart.home.api.compilation.PhilipsAPIV;
 import com.sacide.smart.home.api.compilation.backend.Device;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import javax.xml.bind.DatatypeConverter;
 
 public class NetUtils {
 
@@ -52,6 +55,24 @@ public class NetUtils {
 	 */
 	public static String makeAPIRequest(URL url, String method, String body)
 			throws AuthenticationException, IOException {
+		String[] t = null;
+		return makeAPIRequest(url, method, body, t);
+	}
+	
+	/**
+	 * Sends a request and receives a response.
+	 *
+	 * @param url The url to send the request to.
+	 * @param method The HTTP method to use.
+	 * @param body The body to be sent in the message.
+	 * @param headders
+	 * @return The String response as received from the bridge. Refer to the Hue
+	 * API.
+	 * @throws javax.security.sasl.AuthenticationException
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static String makeAPIRequest(URL url, String method, String body, String... headders)
+			throws AuthenticationException, IOException {
 		if(System.currentTimeMillis() < nextRequestTime) {
 			try {
 				Thread.sleep(nextRequestTime - System.currentTimeMillis());
@@ -63,6 +84,13 @@ public class NetUtils {
 		conn.setRequestMethod(method.toUpperCase());
 		conn.setDoOutput(true);
 		conn.setConnectTimeout(200);
+		if(headders != null) {
+			for(int i=0; i<headders.length/2; i+=2) {
+				//String encoding0 = Base64.getEncoder().encodeToString(headders[i].getBytes(StandardCharsets.UTF_8));
+				//String encoding1 = Base64.getEncoder().encodeToString(headders[i+1].getBytes(StandardCharsets.UTF_8));
+				conn.setRequestProperty(headders[i], headders[i+1]);
+			}
+		}
 		if(body != null && body.length() > 0) {
 			conn.setRequestProperty("Content-Length", Integer.toString(body.length()));
 
@@ -71,7 +99,7 @@ public class NetUtils {
 			os.flush();
 			os.close();
 		}
-
+		
 		Scanner in = new Scanner(conn.getInputStream());
 		StringBuilder sb = new StringBuilder();
 		while(in.hasNext()) {
@@ -80,10 +108,6 @@ public class NetUtils {
 		in.close();
 		nextRequestTime = System.currentTimeMillis() + REQUEST_FREQ_TIME;
 		String resp = sb.toString();
-
-		if(!resp.contains("Device is set to off") && resp.contains("error")) {
-			throw new AuthenticationException(resp);
-		}
 
 		return resp;
 	}
@@ -139,27 +163,6 @@ public class NetUtils {
 		return body.deleteCharAt(body.length() - 1).append("}").toString();
 	}
 
-	/**
-	 * Performs a get request on the provided HTTPS url.
-	 *
-	 * @param url The HTTPS url
-	 * @return The String response from the url
-	 * @throws IOException
-	 */
-	public static String getFromHttps(URL url) throws IOException {
-		HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-		StringBuilder sb = new StringBuilder();
-		String input;
-		while((input = br.readLine()) != null) {
-			sb.append(input).append("\n");
-		}
-		br.close();
-
-		return sb.toString();
-	}
-
 	public static boolean isJSONArr(String json) {
 		int arrInd = json.indexOf("[");
 		if(arrInd == -1) {
@@ -185,7 +188,51 @@ public class NetUtils {
 	}
 
 	public interface ResponseChecker {
-
 		public Device checkResponse(String host) throws IOException;
 	}
+	
+	/**
+	 * Simple get String from URL.
+	 * @param url URL to access
+	 * @return The String content from the URL
+	 * @throws IOException 
+	 */
+	public static String readURL(URL url) throws IOException {
+		IOException e = new IOException();
+		for(int i=0; i<3; i++) {
+			try {
+				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+				String inputLine;
+				StringBuilder sb = new StringBuilder();
+				while ((inputLine = in.readLine()) != null)
+					sb.append(inputLine).append("\n");
+				in.close();
+				return sb.toString();
+			} catch(IOException ex) {
+				e = ex;
+			}
+		}
+		throw e;
+	}
+	
+	/**
+	 * Performs a get request on the provided HTTPS url.
+	 * @param url The HTTPS url
+	 * @return The String response from the url
+	 * @throws IOException
+	 */
+	public static String getFromHttps(URL url) throws IOException {
+		HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+		StringBuilder sb = new StringBuilder();
+		String input;
+		while ((input = br.readLine()) != null) {
+			sb.append(input).append("\n");
+		}
+		br.close();
+
+		return sb.toString();
+	}
+    
 }

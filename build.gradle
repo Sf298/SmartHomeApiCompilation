@@ -16,6 +16,8 @@ if (!hasProperty('mainClass')) {
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
+    
     // You may define additional repositories, or even remove "mavenCentral()".
     // Read more about repositories here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
@@ -30,6 +32,8 @@ dependencies {
     
     testCompile group: 'junit', name: 'junit', version: '4.10'
   
-	compile group: 'com.google.code.gson', name: 'gson', version: '2.6.1'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.6.1'
+    
+    compile 'com.github.Sf298:Sauds-Toolbox:7051109848be1e5bb0703d3943ae865e5199bf8b'
     
 }
