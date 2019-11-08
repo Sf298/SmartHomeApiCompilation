@@ -32,7 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.json.*;
-import sauds.toolbox.Properties;
+import sauds.toolbox.propsFile.PropertiesFile;
 
 /**
  *
@@ -43,7 +43,7 @@ public final class PhilipsAPIV implements IActionAPI {
     private final String DISCOVERY_URL = "https://discovery.meethue.com/";
     private HashMap<String, BridgeObj> allBridges;                   //*
     private HashMap<String, BridgeObj> onlineBridges;
-    private final Properties saveFile; // username, selected bridge mac
+    private final PropertiesFile saveFile; // username, selected bridge mac
     
     /**
      * Creates a PhilipsAPIV Object.
@@ -57,7 +57,7 @@ public final class PhilipsAPIV implements IActionAPI {
      * @param persistenceFile The file in which to store the username and preferred bridge mac. 
      */
     public PhilipsAPIV(File persistenceFile) {
-        saveFile = new Properties(persistenceFile);
+        saveFile = new PropertiesFile(persistenceFile);
         if(saveFile.fileExists()) {
             load();
         } else {
