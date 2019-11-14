@@ -60,7 +60,7 @@ public class LifxAPI implements IActionAPI {
 				
 				
 				Device d = new Device(ip, port, label);
-				out.add(d);
+				out.add(toRGBLightDevice(d));
 			}
 		} catch(Exception ex) {
 			Logger.getLogger(LifxAPI.class.getName()).log(Level.SEVERE, null, ex);
