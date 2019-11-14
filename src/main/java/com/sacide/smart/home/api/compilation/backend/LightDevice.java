@@ -23,11 +23,11 @@ public abstract class LightDevice extends OnOffDevice {
         super(d);
     }
     
-    public abstract void setLightPowerState(boolean on, long duration) throws IOException;
+    public abstract void setLightPowerState(boolean on, int duration) throws IOException;
     
     public abstract boolean getLightPowerState() throws IOException;
     
-    public abstract void setLightBrightness(double brightness, long duration) throws IOException;
+    public abstract void setLightBrightness(double brightness, int duration) throws IOException;
     
     public abstract double getLightBrightness() throws IOException;
     

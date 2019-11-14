@@ -8,10 +8,10 @@ package com.sacide.smart.home.api.compilation;
 import com.sacide.smart.home.api.compilation.backend.IActionAPI;
 import com.sacide.smart.home.api.compilation.backend.LightDevice;
 import com.sacide.smart.home.api.compilation.backend.Device;
+import com.sacide.smart.home.api.compilation.backend.HSVK;
 import com.sacide.smart.home.api.compilation.backend.RGBLightDevice;
 import com.sacide.smart.home.api.compilation.backend.utils.NetUtils;
 
-import LifxCommander.Messages.DataTypes.HSBK;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -253,7 +253,7 @@ public final class PhilipsAPIV implements IActionAPI {
 				return getLightPowerState();
 			}
             @Override
-            public void setLightPowerState(boolean on, long duration) throws IOException {
+            public void setLightPowerState(boolean on, int duration) throws IOException {
             	NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>/state"), "PUT",
                         NetUtils.properties2body(
                                 "\"on\"", on+"",
@@ -267,7 +267,7 @@ public final class PhilipsAPIV implements IActionAPI {
                 return resp.getJSONObject("state").getBoolean("on");
             }
             @Override
-            public void setLightBrightness(double brightness, long duration) throws IOException {
+            public void setLightBrightness(double brightness, int duration) throws IOException {
             	NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>/state"), "PUT",
                         NetUtils.properties2body("\"bri\"", ( (int)(brightness*253)+1 )+""));
             }
@@ -291,7 +291,7 @@ public final class PhilipsAPIV implements IActionAPI {
 				return getLightPowerState();
 			}
             @Override
-            public void setLightPowerState(boolean on, long duration) throws IOException {
+            public void setLightPowerState(boolean on, int duration) throws IOException {
             	NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>/state"), "PUT",
                         NetUtils.properties2body(
                                 "\"on\"", on+"",
@@ -305,34 +305,34 @@ public final class PhilipsAPIV implements IActionAPI {
                 return resp.getJSONObject("state").getBoolean("on");
             }
             @Override
-            public void setLightColor(HSBK hsbk, long duration) throws IOException {
-                if(hsbk.hasEmpty())
-                    hsbk.updateEmptyWith(getLightColor());
+            public void setLightColor(HSVK hsvk, int duration) throws IOException {
+                if(hsvk.hasNullValue())
+                    hsvk.fillNullWith(getLightColor());
 
                 NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>/state"), "PUT",
                         NetUtils.properties2body(
-                                "\"hue\"", hsbk.getHue(65535)+"",
-                                "\"sat\"", hsbk.getSaturation(254)+"",
-                                "\"bri\"", (hsbk.getBrightness(253)+1)+"" ));
+                                "\"hue\"", hsvk.getHue(65535)+"",
+                                "\"sat\"", hsvk.getSat(254)+"",
+                                "\"bri\"", (hsvk.getVal(253)+1)+"" ));
             }
             @Override
-            public void setLightBrightness(double brightness, long duration) throws IOException {
-                setLightColor(new HSBK(-1, -1, (int) (HSBK.MAX_BRI*brightness), -1), duration);
+            public void setLightBrightness(double brightness, int duration) throws IOException {
+                setLightColor(new HSVK(null, null, brightness, null), duration);
             }
             @Override
-            public HSBK getLightColor() throws IOException {
+            public HSVK getLightColor() throws IOException {
                 String response = NetUtils.makeAPIRequest(parseURL(this, "/api/<uname>/lights/<deviceId>"), "GET", null);
 				checkResponse(response);
                 JSONObject state = new JSONObject(response).getJSONObject("state");
-                HSBK out = new HSBK();
+                HSVK out = new HSVK();
                 out.setHue(state.getInt("hue"), 65535);
-                out.setSaturation(state.getInt("sat"), 254);
-                out.setBrightness(state.getInt("bri")-1, 253);
+                out.setSat(state.getInt("sat"), 254);
+                out.setVal(state.getInt("bri")-1, 253);
                 return out;
             }
             @Override
             public double getLightBrightness() throws IOException {
-                return getLightColor().getBrightness()/HSBK.MAX_BRI;
+                return getLightColor().getVal();
             }
         };
     }

@@ -5,8 +5,6 @@
  */
 package com.sacide.smart.home.api.compilation;
 
-import LifxCommander.Messages.DataTypes.HSBK;
-
 import com.sacide.smart.home.api.compilation.backend.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class Main {
         for (Device d : devices) {
             /*if(d instanceof RGBLightDevice) {
                 RGBLightDevice rgb = (RGBLightDevice) d;
-                rgb.setLightColor(HSBK.INCANDESCENT, 0);
+                rgb.setLightColor(HSVK.INCANDESCENT, 0);
                 continue;
             }*
             if(d instanceof LightDevice) {
@@ -51,30 +49,30 @@ public class Main {
 
     public static void testLifx() {
             try {
-                    LifxCommanderW lifx = new LifxCommanderW();
+                    LifxAPI lifx = new LifxAPI();
                     lifx.discoverDevices();
                     RGBLightDevice ld = lifx.toRGBLightDevice(new Device("192.168.0.56", 56700));
                     ld.setLightPowerState(true, 0);
 
-                    HSBK col;
+                    HSVK col;
                     double num = Math.random();
                     if (num < (1 / 4f)) {
-                            col = HSBK.CRIMSON;
+                            col = HSVK.CRIMSON;
                             System.out.println("red");
                     } else if (num < (2 / 4f)) {
-                            col = HSBK.INDIGO;
+                            col = HSVK.INDIGO;
                             System.out.println("indigo");
                     } else if (num < (3 / 4f)) {
-                            col = HSBK.FOREST_GREEN;
+                            col = HSVK.FOREST_GREEN;
                             System.out.println("green");
                     } else {
-                            col = HSBK.INCANDESCENT;
+                            col = HSVK.INCANDESCENT;
                             System.out.println("incan");
                     }
-                    ld.setLightColor(HSBK.DAYLIGHT, 0);
+                    ld.setLightColor(HSVK.DAYLIGHT, 0);
                     ld.setLightBrightness(0.47, 0);
             } catch (IOException ex) {
-                    Logger.getLogger(LifxCommanderW.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
 

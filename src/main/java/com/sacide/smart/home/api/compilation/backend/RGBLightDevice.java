@@ -5,7 +5,6 @@
  */
 package com.sacide.smart.home.api.compilation.backend;
 
-import LifxCommander.Messages.DataTypes.HSBK;
 import java.io.IOException;
 
 /**
@@ -26,8 +25,8 @@ public abstract class RGBLightDevice extends LightDevice {
         super(d);
     }
     
-    public abstract void setLightColor(HSBK hsbk, long duration) throws IOException;
+    public abstract void setLightColor(HSVK hsvk, int duration) throws IOException;
     
-    public abstract HSBK getLightColor() throws IOException;
+    public abstract HSVK getLightColor() throws IOException;
     
 }

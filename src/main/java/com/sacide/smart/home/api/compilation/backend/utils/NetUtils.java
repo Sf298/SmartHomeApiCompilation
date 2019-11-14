@@ -19,6 +19,7 @@ import javax.security.sasl.AuthenticationException;
 
 import com.sacide.smart.home.api.compilation.PhilipsAPIV;
 import com.sacide.smart.home.api.compilation.backend.Device;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.xml.bind.DatatypeConverter;
@@ -120,8 +121,7 @@ public class NetUtils {
 	 * @throws Exception
 	 */
 	public static ArrayList<Device> getAvaiableDevicesByIP(ResponseChecker rc) throws Exception {
-		String localIp = InetAddress.getLocalHost().getHostAddress();
-		String subnet = localIp.substring(0, localIp.lastIndexOf('.')) + ".";
+		String subnet = getSubnet();
 
 		List<Device> found = Collections.synchronizedList(new ArrayList<Device>());
 		ArrayList<Thread> threads = new ArrayList<>();
@@ -154,7 +154,18 @@ public class NetUtils {
 
 		return new ArrayList<>(found);
 	}
+	public interface ResponseChecker {
+		public Device checkResponse(String host) throws IOException;
+	}
+	
+	public static String getSubnet() throws UnknownHostException {
+		String localIp = InetAddress.getLocalHost().getHostAddress();
+		String subnet = localIp.substring(0, localIp.lastIndexOf('.')) + ".";
+		return subnet;
+	}
 
+	
+	
 	public static String properties2body(String... properties) {
 		StringBuilder body = new StringBuilder("{");
 		for(int i = 0; i < properties.length; i += 2) {
@@ -186,10 +197,8 @@ public class NetUtils {
 		}
 		return objInd < arrInd;
 	}
-
-	public interface ResponseChecker {
-		public Device checkResponse(String host) throws IOException;
-	}
+	
+	
 	
 	/**
 	 * Simple get String from URL.
