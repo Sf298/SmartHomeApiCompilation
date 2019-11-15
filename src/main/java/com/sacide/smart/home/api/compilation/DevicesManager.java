@@ -38,7 +38,7 @@ public class DevicesManager {
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while(Thread.interrupted()) {
+				while(!Thread.interrupted()) {
 					try {
 						scanDevices();
 						Thread.sleep(delayms);

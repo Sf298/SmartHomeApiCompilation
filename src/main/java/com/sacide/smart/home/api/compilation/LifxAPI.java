@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  */
 public class LifxAPI implements IActionAPI {
 	
-	public DatagramSocket socket = null;
+	public static DatagramSocket socket = null;
 	
 	@Override
 	public Collection<Device> discoverDevices() {
